@@ -29,7 +29,6 @@
       const { useState, useEffect, useRef } = React;
 
       function App() {
-        // App Flow: 'auth' -> 'otp' -> 'setup' -> 'app'
         const [step, setStep] = useState('auth');
         const [userEmail, setUserEmail] = useState('');
         const [emailError, setEmailError] = useState('');
@@ -38,7 +37,6 @@
         const [showOAuthModal, setShowOAuthModal] = useState(false);
         const [selectedOAuth, setSelectedOAuth] = useState('');
 
-        // Store & Location Settings
         const [settings, setSettings] = useState({
           country: 'المغرب',
           currency: 'MAD',
@@ -47,7 +45,6 @@
           taxRate: '20%'
         });
 
-        // Store Setup Data
         const [storeData, setStoreData] = useState({
           projectName: 'Aura Store Morocco',
           businessType: 'إلكترونيات وساعات ذكية',
@@ -55,7 +52,6 @@
           monthlySalesTarget: '100000'
         });
 
-        // Active Dashboard Tab
         const [activeTab, setActiveTab] = useState('dashboard');
         const [aiInput, setAiInput] = useState('');
         const [aiMessages, setAiMessages] = useState([
@@ -66,13 +62,11 @@
         const chartRef = useRef(null);
         const chartInstance = useRef(null);
 
-        // Update Currency Symbol & Multiplier
         useEffect(() => {
           const symbols = { 'MAD': 'MAD', 'USD': '$', 'EUR': '€', 'SAR': 'SAR' };
           setSettings(prev => ({ ...prev, currencySymbol: symbols[prev.currency] || prev.currency }));
         }, [settings.currency]);
 
-        // Chart Initialization
         useEffect(() => {
           if (step === 'app' && activeTab === 'dashboard' && chartRef.current) {
             if (chartInstance.current) {
@@ -119,7 +113,6 @@
           }
         }, [step, activeTab, settings.currency]);
 
-        // Email Validation
         const validateEmail = (email) => {
           const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           return re.test(String(email).toLowerCase());
@@ -174,7 +167,6 @@
           }, 1000);
         };
 
-        // STEP 1: AUTHENTICATION SCREEN
         if (step === 'auth') {
           return (
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#0b0f19] via-[#111827] to-[#0b0f19]">
@@ -187,7 +179,6 @@
                   <p className="text-xs text-gray-400 mt-2">منصة إدارة التجارة والمتاجر الذكية العالمية</p>
                 </div>
 
-                {/* Social Login Buttons */}
                 <div className="space-y-3 mb-6">
                   <button 
                     onClick={() => handleOAuthClick('Google')}
@@ -235,7 +226,6 @@
                   </button>
                 </form>
 
-                {/* OAuth Popup Modal Simulation */}
                 {showOAuthModal && (
                   <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
                     <div className="bg-[#111827] border border-gray-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
@@ -250,16 +240,6 @@
                           <div>
                             <p className="text-xs font-bold text-white">عبد الصمد (الحساب الرئيسي)</p>
                             <p className="text-[10px] text-gray-400">abdessamad@{selectedOAuth.toLowerCase().replace(/[^a-z]/g, '')}.com</p>
-                          </div>
-                        </button>
-
-                        <button 
-                          onClick={() => confirmOAuthLogin(`enterprise.admin@${selectedOAuth.toLowerCase().replace(/[^a-z]/g, '')}.com`)}
-                          className="w-full text-right p-3 bg-gray-800 hover:bg-gray-700/80 rounded-xl border border-gray-700 flex items-center gap-3 transition">
-                          <div className="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 font-bold text-xs flex items-center justify-center">M</div>
-                          <div>
-                            <p className="text-xs font-bold text-white">Morocco Store Admin</p>
-                            <p className="text-[10px] text-gray-400">admin@aurastore.ma</p>
                           </div>
                         </button>
                       </div>
@@ -277,7 +257,6 @@
           );
         }
 
-        // STEP 1.5: OTP VERIFICATION
         if (step === 'otp') {
           return (
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#0b0f19] via-[#111827] to-[#0b0f19]">
@@ -286,7 +265,7 @@
                   ✉️
                 </div>
                 <h2 className="text-xl font-bold text-white">إدخال رمز التحقق</h2>
-                <p className="text-xs text-gray-400 mt-2 mb-6">تم إرسال رمز أمان مؤلف من 6 أرقام إلى: <br/><strong className="text-emerald-400">{userEmail}</strong></p>
+                <p className="text-xs text-gray-400 mt-2 mb-6">تم إرسال رمز أمان إلى بريدك:<br/><strong className="text-emerald-400">{userEmail}</strong></p>
 
                 <form onSubmit={handleOtpSubmit} className="space-y-6">
                   <div className="flex justify-center gap-2" dir="ltr">
@@ -300,11 +279,10 @@
                       />
                     ))}
                   </div>
-
                   <button 
                     type="submit" 
                     className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-3.5 rounded-xl text-xs transition shadow-lg shadow-emerald-500/20">
-                    تأكيد الدخول والنقل لتجهيز المتجر ←
+                    تأكيد الدخول ←
                   </button>
                 </form>
               </div>
@@ -312,15 +290,14 @@
           );
         }
 
-        // STEP 2: STORE SETUP WIZARD
         if (step === 'setup') {
           return (
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#0b0f19] via-[#111827] to-[#0b0f19]">
               <div className="w-full max-w-lg bg-[#111827] border border-gray-800 rounded-3xl p-8 shadow-2xl">
                 <div className="mb-6">
-                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800/50">تجهيز بيئة العمل</span>
+                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800/50">إعداد بيئة العمل</span>
                   <h2 className="text-xl font-bold text-white mt-3">إعدادات متجرك الأولية</h2>
-                  <p className="text-xs text-gray-400 mt-1">تنسيق الدولة والعملة لضبط جميع الإحصائيات والذكاء الاصطناعي.</p>
+                  <p className="text-xs text-gray-400 mt-1">تنسيق الدولة والعملة لضبط الإحصائيات والذكاء الاصطناعي.</p>
                 </div>
 
                 <form onSubmit={handleSetupSubmit} className="space-y-4">
@@ -387,10 +364,8 @@
           );
         }
 
-        // STEP 3: REALISTIC APPLICATION DASHBOARD
         return (
           <div className="flex h-screen overflow-hidden">
-            {/* Sidebar */}
             <aside className="w-64 bg-[#111827] border-l border-gray-800 p-5 flex flex-col justify-between shrink-0">
               <div>
                 <div className="flex items-center gap-3 mb-8">
@@ -398,9 +373,7 @@
                     A
                   </div>
                   <div>
-                    <h1 className="font-bold text-base text-white truncate max-w-[130px]">
-                      {storeData.projectName}
-                    </h1>
+                    <h1 className="font-bold text-base text-white truncate max-w-[130px]">{storeData.projectName}</h1>
                     <span className="text-[10px] text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/50 font-mono">ENTERPRISE LIVE</span>
                   </div>
                 </div>
@@ -427,22 +400,17 @@
               <div className="pt-4 border-t border-gray-800">
                 <div className="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50 flex items-center justify-between">
                   <div className="flex items-center gap-2 overflow-hidden">
-                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 font-bold text-xs">
-                      ع
-                    </div>
+                    <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 font-bold text-xs">ع</div>
                     <div className="overflow-hidden">
                       <p className="text-xs font-bold text-white truncate max-w-[100px]">{userEmail}</p>
                       <p className="text-[10px] text-emerald-400 font-medium">{authProvider}</p>
                     </div>
                   </div>
-                  <button onClick={() => setStep('auth')} className="text-gray-500 hover:text-red-400 text-xs font-bold transition">
-                    خروج
-                  </button>
+                  <button onClick={() => setStep('auth')} className="text-gray-500 hover:text-red-400 text-xs font-bold transition">خروج</button>
                 </div>
               </div>
             </aside>
 
-            {/* Main Content Area */}
             <main className="flex-1 flex flex-col h-screen overflow-y-auto custom-scrollbar p-8 bg-[#0b0f19]">
               <header className="flex flex-wrap justify-between items-center gap-4 mb-8 pb-4 border-b border-gray-800">
                 <div>
@@ -450,191 +418,98 @@
                   <p className="text-xs text-gray-400 mt-1">الدولة: {settings.country} | العملة المفضلة: {settings.currencySymbol} ({settings.currency})</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold px-3 py-2 rounded-xl">
-                    🟢 الخادم متصل وجاهز
-                  </span>
-                  <button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-black font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-lg shadow-emerald-500/20">
-                    + إضافة منتج جديد
-                  </button>
+                  <span className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold px-3 py-2 rounded-xl">🟢 متصل وجاهز</span>
+                  <button className="bg-gradient-to-r from-emerald-500 to-teal-500 text-black font-bold px-5 py-2.5 rounded-xl text-xs transition shadow-lg">+ إضافة منتج جديد</button>
                 </div>
               </header>
 
-              {/* TAB 1: DASHBOARD */}
               {activeTab === 'dashboard' && (
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                     <div className="bg-[#111827] p-5 rounded-2xl border border-gray-800">
                       <p className="text-xs font-semibold text-gray-400 mb-2">إجمالي المبيعات</p>
                       <p className="text-2xl font-black text-white">510,000 <span className="text-xs font-bold text-emerald-400">{settings.currencySymbol}</span></p>
-                      <span className="text-[11px] text-emerald-400 font-bold mt-2 inline-block">↑ +24.8% نمو أسبوعي</span>
                     </div>
-
                     <div className="bg-[#111827] p-5 rounded-2xl border border-gray-800">
                       <p className="text-xs font-semibold text-gray-400 mb-2">صافي الأرباح</p>
                       <p className="text-2xl font-black text-white">280,000 <span className="text-xs font-bold text-cyan-400">{settings.currencySymbol}</span></p>
-                      <span className="text-[11px] text-cyan-400 font-bold mt-2 inline-block">هامش صافي: 54.9%</span>
                     </div>
-
                     <div className="bg-[#111827] p-5 rounded-2xl border border-gray-800">
                       <p className="text-xs font-semibold text-gray-400 mb-2">المخزون المتوفر</p>
                       <p className="text-2xl font-black text-white">{storeData.inventorySize} <span className="text-xs font-normal text-gray-400">قطعة</span></p>
-                      <span className="text-[11px] text-gray-400 mt-2 inline-block">حالة المخزون: ممتازة</span>
                     </div>
-
                     <div className="bg-[#111827] p-5 rounded-2xl border border-gray-800">
                       <p className="text-xs font-semibold text-gray-400 mb-2">توصيات AI</p>
                       <p className="text-2xl font-black text-amber-400">3</p>
-                      <span className="text-[11px] text-amber-300 font-bold mt-2 inline-block">تحسينات المبيعات</span>
                     </div>
                   </div>
-
                   <div className="bg-[#111827] p-6 rounded-2xl border border-gray-800">
                     <h3 className="text-base font-bold text-white mb-1">مسار الأداء المالي والنمو ({settings.currencySymbol})</h3>
-                    <p className="text-xs text-gray-400 mb-6">مخطط تفاعلي مباشر يعتمد العملة والدولة المحددة</p>
-                    <div className="h-72">
-                      <canvas ref={chartRef}></canvas>
-                    </div>
+                    <div className="h-72"><canvas ref={chartRef}></canvas></div>
                   </div>
                 </div>
               )}
 
-              {/* TAB 2: AI ASSISTANT */}
               {activeTab === 'ai-assistant' && (
                 <div className="flex-1 flex flex-col bg-[#111827] rounded-2xl border border-gray-800 overflow-hidden h-[580px]">
                   <div className="p-4 bg-gray-800/50 border-b border-gray-800">
                     <h3 className="text-base font-bold text-white">✨ مساعد Gemini AI المباشر</h3>
-                    <p className="text-xs text-gray-400">تحليل متجر {storeData.projectName} في {settings.country}</p>
                   </div>
-
                   <div className="flex-1 p-4 overflow-y-auto space-y-4 custom-scrollbar">
                     {aiMessages.map((msg, idx) => (
                       <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[75%] p-4 rounded-2xl text-xs leading-relaxed ${
-                          msg.role === 'user' 
-                            ? 'bg-emerald-500 text-black font-semibold rounded-br-none' 
-                            : 'bg-gray-800 text-gray-200 border border-gray-700/80 rounded-bl-none whitespace-pre-line'
-                        }`}>
+                        <div className={`max-w-[75%] p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-emerald-500 text-black font-semibold rounded-br-none' : 'bg-gray-800 text-gray-200 border border-gray-700/80 rounded-bl-none whitespace-pre-line'}`}>
                           {msg.text}
                         </div>
                       </div>
                     ))}
-                    {isAiLoading && (
-                      <div className="flex justify-start">
-                        <div className="bg-gray-800 p-3 rounded-2xl border border-gray-700 text-xs text-emerald-400 animate-pulse">
-                          جاري معالجة طلبك بواسطة الذكاء الاصطناعي...
-                        </div>
-                      </div>
-                    )}
                   </div>
-
                   <div className="p-4 border-t border-gray-800 bg-gray-900/50 flex gap-3">
-                    <input 
-                      type="text" 
-                      placeholder="اكتب استفسارك هنا..." 
-                      value={aiInput} 
-                      onChange={(e) => setAiInput(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500"
-                    />
-                    <button onClick={handleSendMessage} className="bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-6 py-3 rounded-xl text-xs transition">
-                      إرسال
-                    </button>
+                    <input type="text" placeholder="اكتب استفسارك هنا..." value={aiInput} onChange={(e) => setAiInput(e.target.value)} className="flex-1 bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500" />
+                    <button onClick={handleSendMessage} className="bg-emerald-500 hover:bg-emerald-600 text-black font-bold px-6 py-3 rounded-xl text-xs transition">إرسال</button>
                   </div>
                 </div>
               )}
 
-              {/* TAB 3: INVENTORY */}
               {activeTab === 'inventory' && (
                 <div className="bg-[#111827] p-6 rounded-2xl border border-gray-800">
                   <h3 className="text-base font-bold text-white mb-6">إدارة المنتجات والمخزون</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-right text-xs text-gray-300">
-                      <thead className="bg-gray-800/60 text-gray-400 font-bold uppercase border-b border-gray-700">
-                        <tr>
-                          <th className="p-3">اسم المنتج</th>
-                          <th className="p-3">الفئة</th>
-                          <th className="p-3">السعر ({settings.currencySymbol})</th>
-                          <th className="p-3">الكمية</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-800">
-                        <tr>
-                          <td className="p-3 font-semibold text-white">ساعة Aura Smart Watch Pro</td>
-                          <td className="p-3">إلكترونيات</td>
-                          <td className="p-3 font-bold text-emerald-400">899.00 {settings.currencySymbol}</td>
-                          <td className="p-3">85 قطعة</td>
-                        </tr>
-                        <tr>
-                          <td className="p-3 font-semibold text-white">سماعات Aura Sound Pods Max</td>
-                          <td className="p-3">صوتيات</td>
-                          <td className="p-3 font-bold text-emerald-400">499.00 {settings.currencySymbol}</td>
-                          <td className="p-3">65 قطعة</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <table className="w-full text-right text-xs text-gray-300">
+                    <thead className="bg-gray-800/60 text-gray-400 font-bold uppercase border-b border-gray-700">
+                      <tr><th className="p-3">اسم المنتج</th><th className="p-3">الفئة</th><th className="p-3">السعر ({settings.currencySymbol})</th><th className="p-3">الكمية</th></tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-800">
+                      <tr><td className="p-3 font-semibold text-white">ساعة Aura Smart Watch Pro</td><td className="p-3">إلكترونيات</td><td className="p-3 font-bold text-emerald-400">899.00 {settings.currencySymbol}</td><td className="p-3">85 قطعة</td></tr>
+                    </tbody>
+                  </table>
                 </div>
               )}
 
-              {/* TAB 4: AUDIT LOGS */}
               {activeTab === 'logs' && (
                 <div className="bg-[#111827] p-6 rounded-2xl border border-gray-800">
                   <h3 className="text-base font-bold text-white mb-6">📜 سجل النشاطات والأمان (Audit Logs)</h3>
-                  <div className="space-y-3">
-                    <div className="p-3 bg-gray-900/60 border border-gray-800 rounded-xl flex justify-between items-center text-xs">
-                      <div>
-                        <span className="text-emerald-400 font-bold">تسجيل دخول ناجح</span>
-                        <p className="text-gray-400 text-[11px] mt-0.5">تم التحقق من الحساب: {userEmail} عبر {authProvider}</p>
-                      </div>
-                      <span className="text-gray-500 font-mono text-[10px]">الآن</span>
-                    </div>
-                    <div className="p-3 bg-gray-900/60 border border-gray-800 rounded-xl flex justify-between items-center text-xs">
-                      <div>
-                        <span className="text-cyan-400 font-bold">تحديث إعدادات الدولة والعملة</span>
-                        <p className="text-gray-400 text-[11px] mt-0.5">تغيير العملة النشطة إلى {settings.currency} والدولة إلى {settings.country}</p>
-                      </div>
-                      <span className="text-gray-500 font-mono text-[10px]">قبل دقيقتين</span>
-                    </div>
+                  <div className="p-3 bg-gray-900/60 border border-gray-800 rounded-xl text-xs">
+                    <span className="text-emerald-400 font-bold">تسجيل دخول ناجح</span>
+                    <p className="text-gray-400 text-[11px] mt-0.5">الحساب: {userEmail} عبر {authProvider}</p>
                   </div>
                 </div>
               )}
 
-              {/* TAB 5: REAL SETTINGS */}
               {activeTab === 'settings' && (
                 <div className="bg-[#111827] p-8 rounded-2xl border border-gray-800 max-w-2xl">
                   <h3 className="text-lg font-bold text-white mb-2">⚙️ إعدادات الدولة والعملة والتوطين</h3>
-                  <p className="text-xs text-gray-400 mb-6">تخصيص الإعدادات المالية والجغرافية لتطبيق التغييرات فوراً.</p>
-
                   <div className="space-y-5">
                     <div>
                       <label className="block text-xs font-bold text-gray-300 mb-2">الدولة النشطة</label>
-                      <select 
-                        value={settings.country} 
-                        onChange={(e) => setSettings({...settings, country: e.target.value})}
-                        className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        <option value="المغرب">المغرب 🇲🇦</option>
-                        <option value="السعودية">السعودية 🇸🇦</option>
-                        <option value="الإمارات">الإمارات 🇦🇪</option>
-                        <option value="فرنسا">فرنسا 🇫🇷</option>
-                        <option value="أمريكا">أمريكا 🇺🇸</option>
+                      <select value={settings.country} onChange={(e) => setSettings({...settings, country: e.target.value})} className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs text-white">
+                        <option value="المغرب">المغرب 🇲🇦</option><option value="السعودية">السعودية 🇸🇦</option><option value="الإمارات">الإمارات 🇦🇪</option>
                       </select>
                     </div>
-
                     <div>
-                      <label className="block text-xs font-bold text-gray-300 mb-2">العملة الرسمية للمتجر</label>
-                      <select 
-                        value={settings.currency} 
-                        onChange={(e) => setSettings({...settings, currency: e.target.value})}
-                        className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-emerald-500">
-                        <option value="MAD">الدرهم المغربي (MAD)</option>
-                        <option value="USD">الدولار الأمريكي (USD $)</option>
-                        <option value="EUR">اليورو (EUR €)</option>
-                        <option value="SAR">الريال السعودي (SAR)</option>
+                      <label className="block text-xs font-bold text-gray-300 mb-2">العملة الرسمية</label>
+                      <select value={settings.currency} onChange={(e) => setSettings({...settings, currency: e.target.value})} className="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs text-white">
+                        <option value="MAD">الدرهم المغربي (MAD)</option><option value="USD">الدولار الأمريكي ($)</option><option value="SAR">الريال السعودي (SAR)</option>
                       </select>
-                    </div>
-
-                    <div className="p-4 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 mt-6">
-                      ✓ جميع الإعدادات يتم حفظها وتطبيقها على كامل شاشات اللوحة والرسوم البيانية فوراً.
                     </div>
                   </div>
                 </div>
